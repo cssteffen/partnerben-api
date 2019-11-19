@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
+const cors = require("cors");
+const { CLIENT_ORIGIN } = require("./config");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +17,11 @@ const morganOption = NODE_ENV === "production" ? "tiny" : "common"; //or use dev
 
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
