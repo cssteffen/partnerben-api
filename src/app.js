@@ -6,6 +6,10 @@ const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+app.get("/api/*", (req, res) => {
+  res.json({ ok: true });
+});
 
 const morganOption = NODE_ENV === "production" ? "tiny" : "common"; //or use dev in place of common
 
