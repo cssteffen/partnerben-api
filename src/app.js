@@ -23,10 +23,12 @@ app.use(
   })
 );
 
-const users = require("../test/test-helper");
-app.use("/api/users", (req, res) => {
-  res.json(users);
-});
+//const users = require("../test/test-helper");
+//app.use("/api/users", (req, res) => {
+//  res.json(users);
+//});
+
+app.use("/api/users", usersRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");

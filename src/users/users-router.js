@@ -5,10 +5,25 @@ const UsersService = require("./users-service");
 const usersRouter = express.Router();
 const jsonBodyParser = express.json();
 
+/*
+    id 
+    user_email 
+    password 
+    first_name 
+    last_name 
+    state_location 
+    hours_padded 
+    date_created 
+    date_modified
+*/
+usersRouter.route("/").get((req, res) => {
+  res.json({ ok: true });
+});
+
 usersRouter.post("/", jsonBodyParser, (req, res, next) => {
   const {
-    password,
     user_email,
+    password,
     first_name,
     last_name,
     state_location

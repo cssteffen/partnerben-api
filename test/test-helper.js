@@ -51,19 +51,46 @@ function makePayStubsArray(users) {
     {
       id: 1,
       paystub_date: "2029-01-22T16:28:32.615Z",
-      ben_hours: 421,
-      vacation_hours: 13,
-      sick_hours: 8,
+      ben_hours: 421.25,
+      vacation_hours: 13.15,
+      sick_hours: 8.75,
       user_id: users[0].id,
       date_created: "2029-01-22T16:28:32.615Z"
     },
     {
-      id: 1,
+      id: 2,
       paystub_date: "2029-01-22T16:28:32.615Z",
-      ben_hours: 421,
-      vacation_hours: 13,
-      sick_hours: 8,
-      user_id: users[0].id,
+      ben_hours: 221.75,
+      vacation_hours: 9.85,
+      sick_hours: 8.65,
+      user_id: users[1].id,
+      date_created: "2029-01-22T16:28:32.615Z"
+    },
+    {
+      id: 3,
+      paystub_date: "2029-01-22T16:28:32.615Z",
+      ben_hours: 321.25,
+      vacation_hours: 10.75,
+      sick_hours: 6.75,
+      user_id: users[2].id,
+      date_created: "2029-01-22T16:28:32.615Z"
+    },
+    {
+      id: 4,
+      paystub_date: "2029-01-22T16:28:32.615Z",
+      ben_hours: 395.25,
+      vacation_hours: 16.75,
+      sick_hours: 14.65,
+      user_id: users[3].id,
+      date_created: "2029-01-22T16:28:32.615Z"
+    },
+    {
+      id: 5,
+      paystub_date: "2029-01-22T16:28:32.615Z",
+      ben_hours: 495.25,
+      vacation_hours: 26.75,
+      sick_hours: 24.65,
+      user_id: users[4].id,
       date_created: "2029-01-22T16:28:32.615Z"
     }
   ];
@@ -112,6 +139,42 @@ users = [
   }
 ];
 
+function cleanTables(db) {
+  return db.raw(
+    `TRUNCATE
+        partnerben_paystubs
+        partnerben_users,
+        RESTART IDENTITY CASCADE`
+  );
+}
+
+function seedUsers(db, users) {
+  const preppedUsers = users.map(user => ({
+    ...user,
+    password: bcrypt.hashSync(user.password, 1)
+  }));
+  return db
+    .into("partnerben_users")
+    .insert(preppedUsers)
+    .then(() =>
+      //update the auto sequence to stay in sync
+      db.raw(`SELECT setval('partnerben_users_id_seq', ?)`, [
+        users[users.length - 1].id
+      ])
+    );
+}
+/*
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+  //const token = Buffer.from(`${user.user_name}:${user.password}`).toString("base64");
+  //return `Basic ${token}`;
+  const token = jwt.sign({ user_id: user.id }, secret, {
+    subject: user.user_email,
+    algorithm: "HS256"
+  });
+  return `Bearer ${token}`;
+}
+*/
+
 function divide(a, b) {
   if (b == 0) {
     throw new Error("Cannot divide by 0");
@@ -121,6 +184,8 @@ function divide(a, b) {
 
 module.exports = {
   users,
+  cleanTables,
+  seedUsers,
   divide,
   makeUsersArray,
   makePayStubsArray
