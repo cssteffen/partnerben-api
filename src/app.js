@@ -4,14 +4,14 @@ const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
-const cors = require("cors");
 const { CLIENT_ORIGIN } = require("./config");
+const usersRouter = require("./users/users-router");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-app.get("/api/*", (req, res) => {
-  res.json({ ok: true });
-});
+//const PORT = process.env.PORT || 3000;
+//app.get("/api/*", (req, res) => {
+//res.json({ ok: true });
+//});
 
 const morganOption = NODE_ENV === "production" ? "tiny" : "common"; //or use dev in place of common
 
@@ -22,6 +22,11 @@ app.use(
     origin: CLIENT_ORIGIN
   })
 );
+
+const users = require("../test/test-helper");
+app.use("/api/users", (req, res) => {
+  res.json(users);
+});
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");

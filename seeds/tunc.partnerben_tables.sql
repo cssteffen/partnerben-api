@@ -1,0 +1,5 @@
+TRUNCATE
+partnerben_paystubs,
+partnerben_users
+RESTART
+IDENTITY CASCADE;
