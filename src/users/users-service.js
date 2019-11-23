@@ -49,6 +49,31 @@ const UsersService = {
     date_created 
     date_modified
 */
+  getAllUsers(db) {
+    return db
+      .from("partnerben_users AS usr")
+      .select(
+        "usr.id",
+        "usr.user_email",
+        "usr.password",
+        "usr.first_name",
+        "usr.last_name",
+        "usr.state_location",
+        "usr.hours_padded",
+        "usr.date_created",
+        "usr.date_modified",
+        ...userFields,
+        db.raw(`count(DISTINCT pay) AS number_of_paychecks`)
+      )
+      .leftJoin("partnerben_paystubs AS pay", "usr.id", "pay.user_id")
+      .groupBy("usr.id");
+  },
+
+  getById(db, id) {
+    return UsersService.getAllUsers(db)
+      .where("usr.id", id)
+      .first();
+  },
 
   serializeUser(user) {
     return {
@@ -57,8 +82,42 @@ const UsersService = {
       last_name: xss(user.last_name),
       state_location: xss(user.state_location),
       hours_padded: 5,
-      date_created: new Date(user.date_created)
+      date_created: new Date(user.date_created),
+      date_modified: new Date(user.date_modified)
     };
+  },
+  /*
+      return db
+      .insert(newUser)
+      .into("partnerben_users")
+      .returning("*")
+      .then(([user]) => user);
+  */
+
+  deleteUser(db, id) {
+    //return db.from("partnerben_users").delete(id);
+    return db("partnerben_users")
+      .where({ id })
+      .delete();
+  },
+
+  updateUser(knex, id, newUserFields) {
+    return knex("partnerben_users")
+      .where({ id })
+      .update(newUserFields);
   }
 };
+
+const userFields = [
+  "usr.id AS user:id",
+  "usr.user_email AS user:user_email",
+  "usr.password AS user:password",
+  "usr.first_name AS user:first_name",
+  "usr.last_name AS user:last_name",
+  "usr.state_location AS user:state_location",
+  "usr.hours_padded AS user:hours_padded",
+  "usr.date_created AS user:date_created",
+  "usr.date_modified AS user:date_modified"
+];
+
 module.exports = UsersService;
