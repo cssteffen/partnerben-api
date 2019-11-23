@@ -86,23 +86,15 @@ const UsersService = {
       date_modified: new Date(user.date_modified)
     };
   },
-  /*
-      return db
-      .insert(newUser)
-      .into("partnerben_users")
-      .returning("*")
-      .then(([user]) => user);
-  */
 
   deleteUser(db, id) {
-    //return db.from("partnerben_users").delete(id);
     return db("partnerben_users")
       .where({ id })
       .delete();
   },
 
-  updateUser(knex, id, newUserFields) {
-    return knex("partnerben_users")
+  updateUser(db, id, newUserFields) {
+    return db("partnerben_users")
       .where({ id })
       .update(newUserFields);
   }
