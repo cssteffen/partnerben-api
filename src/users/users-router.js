@@ -16,9 +16,9 @@ const jsonBodyParser = express.json();
     date_created 
     date_modified
 */
-usersRouter.route("/").get((req, res) => {
-  res.json({ ok: true });
-});
+//usersRouter.route("/").get((req, res) => {
+// res.json({ ok: true });
+//});
 
 usersRouter.post("/", jsonBodyParser, (req, res, next) => {
   const {
@@ -70,16 +70,6 @@ usersRouter.post("/", jsonBodyParser, (req, res, next) => {
           }
         );
       });
-      //res
-      //.status(201)
-      //.location(path.posix.join(req.originalUrl, "/whatever"))
-      //.json({
-      // id: "whatever",
-      //user_name,
-      //full_name,
-      //nickname: nickname || "",
-      //date_created: Date.now()
-      //})
     })
     .catch(next);
 });
@@ -127,7 +117,7 @@ usersRouter
         .status(400)
         .json({ error: `No changes were requested for updating user.` });
     }
-    /* ======= NEED HELP VALIDATING UPDATED PASSWORD ========== *
+    /* ======= NEED HELP VALIDATING/HASHING UPDATED PASSWORD ========== *
     if(userFieldsToUpdate.includes(password)) {
         const passwordError = UsersService.validatePassword(password);
         if (passwordError) {

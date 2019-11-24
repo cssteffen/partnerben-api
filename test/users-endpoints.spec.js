@@ -1,4 +1,5 @@
 const knex = require("knex");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const helpers = require("../test/test-helper");
 const app = require("../src/app");

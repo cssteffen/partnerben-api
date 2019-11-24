@@ -6,6 +6,8 @@ const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
 const { CLIENT_ORIGIN } = require("./config");
 const usersRouter = require("./users/users-router");
+const paycheckRouter = require("./paycheck/paycheck-router");
+const authRouter = require("./auth/auth-router");
 
 const app = express();
 //const PORT = process.env.PORT || 3000;
@@ -29,6 +31,8 @@ app.use(
 //});
 
 app.use("/api/users", usersRouter);
+app.use("/api/paystubs", paycheckRouter);
+app.use("/api/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
