@@ -22,6 +22,14 @@ paycheckRouter.route("/").get((req, res) => {
 
 paycheckRouter
   .route("/")
+  .get((req, res, next) => {
+    PaycheckService.getAllPaychecks(req.app.get("db"))
+      .then(paychecks => {
+        res.json(PaycheckService.serializePaychecks(paychecks));
+      })
+      .catch(next);
+  })
+
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const {
       paystub_date,
