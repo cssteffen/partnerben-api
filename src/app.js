@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
-const { CLIENT_ORIGIN } = require("./config");
+//const { CLIENT_ORIGIN } = require("./config");
 const usersRouter = require("./users/users-router");
 const paycheckRouter = require("./paycheck/paycheck-router");
 const authRouter = require("./auth/auth-router");
@@ -18,12 +18,10 @@ const app = express();
 const morganOption = NODE_ENV === "production" ? "tiny" : "common"; //or use dev in place of common
 
 app.use(morgan(morganOption));
+app.use(cors());
 app.use(helmet());
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN
-  })
-);
+
+//app.use(cors({origin: CLIENT_ORIGIN}));
 
 //const users = require("../test/test-helper");
 //app.use("/api/users", (req, res) => {
