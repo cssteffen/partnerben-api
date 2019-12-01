@@ -12,49 +12,27 @@ const PaycheckService = {
     date_modified
 */
   getAllPaychecks(db) {
-    return db
-      .from("partnerben_paystubs AS pay")
-      .select(
-        "pay.id",
-        "pay.paystub_date",
-        "pay.ben_hours",
-        "pay.sick_hours",
-        "pay.user_id",
-        "pay.date_created",
-        "pay.date_modified",
-        ...userFields
-      )
-      .leftJoin("partnerben_users AS usr", "pay.user_id", "usr.id")
-      .groupBy("pay.id", "usr.id");
+    return (
+      db
+        .from("partnerben_paystubs AS pay")
+        .select(
+          "pay.id",
+          "pay.paystub_date",
+          "pay.ben_hours",
+          "pay.vacation_hours",
+          "pay.sick_hours",
+          "pay.user_id",
+          "pay.date_created",
+          "pay.date_modified",
+          ...userFields
+        )
+        //.leftJoin("partnerben_paycheck as pay", "pay.id, pay.user_id")
+        .leftJoin("partnerben_users AS usr", "pay.user_id", "usr.id")
+    );
+    //.groupBy("usr.id", "pay.id")
   },
   getById(db, id) {
-    return db
-      .from("partnerben_paystubs AS pay")
-      .select(
-        "pay.id",
-        "pay.paystub_date",
-        "pay.ben_hours",
-        "pay.vacation_hours",
-        "pay.sick_hours",
-        "pay.date_created",
-        "pay.date_modified",
-        db.raw(
-          `row_to_json(
-                (SELECT tmp FROM (
-                  SELECT
-                    usr.id,
-                    usr.user_email,
-                    usr.first_name,
-                    usr.last_name,
-                    usr.state_location,
-                    usr.hours_padded,
-                    usr.date_created,
-                    usr.date_modified
-                ) tmp)
-              ) AS "user"`
-        )
-      )
-      .leftJoin("partnerben_users AS usr", "pay.user_id", "usr.id")
+    return PaycheckService.getAllPaychecks(db)
       .where("pay.id", id)
       .first();
   },

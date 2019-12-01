@@ -6,9 +6,9 @@ const { requireAuth } = require("../middleware/jwt-auth");
 const paycheckRouter = express.Router();
 const jsonBodyParser = express.json();
 
-paycheckRouter.route("/").get((req, res) => {
-  res.json({ ok: true });
-});
+//paycheckRouter.route("/").get((req, res) => {
+//res.json({ ok: true });
+//});
 /*
     id,
     paystub_date,
@@ -22,7 +22,7 @@ paycheckRouter.route("/").get((req, res) => {
 
 paycheckRouter
   .route("/")
-  .get((req, res, next) => {
+  .get(requireAuth, (req, res, next) => {
     PaycheckService.getAllPaychecks(req.app.get("db"))
       .then(paychecks => {
         res.json(PaycheckService.serializePaychecks(paychecks));
@@ -112,9 +112,9 @@ paycheckRouter
 /* async/await syntax for promises 
 async function checkUserExists(req, res, next) {
   try {
-    const user = await UsersService.getById(
+    const paycheck = await PaycheckService.getById(
       req.app.get("db"),
-      req.params.user_id
+      req.params.uid
     );
 
     if (!user)
